@@ -2,6 +2,8 @@ package com.ticket.book;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +28,12 @@ public class MemberController {
 	}
 	
 	@PostMapping("/member/insert")
-	public void insert(@RequestBody MemberDto dto) {
+	public void insert(@RequestBody MemberDto dto, HttpServletRequest request) {
+		
+		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/save");
+		System.out.println(path);
+		
+		
 		service.insert(dto);
 	}
 	
