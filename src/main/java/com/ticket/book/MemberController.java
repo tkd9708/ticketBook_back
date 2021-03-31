@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,7 +44,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/member/select")
-	public MemberDto getData(String _id) {
+	public MemberDto getData(@RequestParam String _id) {
 		MemberDto dto = service.getData(_id);
 
 		return dto;
@@ -55,7 +56,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("member/delete")
-	public void delete(String _id) {
+	public void delete(@RequestParam String _id) {
 		service.delete(_id);
 	}
 }

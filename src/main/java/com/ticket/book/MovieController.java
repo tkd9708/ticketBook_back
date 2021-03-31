@@ -54,6 +54,22 @@ public class MovieController {
 		return map;
 	}
 	
+	@GetMapping("/movie/delupload")
+	public void delUpload(HttpServletRequest request) {
+		
+		if(photoname != null) {
+			String path = request.getSession().getServletContext().getRealPath("/WEB-INF/save");
+			System.out.println(path);
+			File file = new File(path + "\\" + photoname);
+			
+			if(file.exists())
+				file.delete();
+		}
+		
+		photoname = null;
+		
+	}
+	
 	@PostMapping("/movie/insert")
 	public void insert(@RequestBody MovieDto dto, HttpServletRequest request) {
 		if(photoname == null)
@@ -69,5 +85,37 @@ public class MovieController {
 	@GetMapping("/movie/list")
 	public List<MovieDto> getList(@RequestParam String memId){
 		return service.getList(memId);
+	}
+	
+	@GetMapping("/movie/select")
+	public MovieDto getData(@RequestParam String _id) {
+		return service.getData(_id);
+	}
+	
+	@GetMapping("/movie/delete")
+	public void delete(@RequestParam String _id, HttpServletRequest request) {
+		String delPhoto = service.getData(_id).getPhoto();
+		
+		if(!delPhoto.equals("n")) {
+			String path = request.getSession().getServletContext().getRealPath("/WEB-INF/save");
+			System.out.println(path);
+			File file = new File(path + "\\" + delPhoto);
+			
+			if(file.exists())
+				file.delete();
+		}
+		
+		service.delete(_id);
+	}
+	
+	@PostMapping("/movie/update")
+	public void update(@RequestBody MovieDto dto) {
+		if(photoname == null) {
+			dto.setPhoto("n");
+		}
+		else
+			dto.setPhoto(photoname);
+		
+		service.update(dto);
 	}
 }
