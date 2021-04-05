@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,9 @@ public class MemberController {
 
 	@Autowired
 	MemberService service;
+	
+	@Autowired
+	BCryptPasswordEncoder pwdEncoder;
 
 	@GetMapping("/")
 	public ModelAndView goHome() {
@@ -34,8 +38,24 @@ public class MemberController {
 		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/save");
 		System.out.println(path);
 		
+		String pwd = pwdEncoder.encode(dto.getPass());
+		dto.setPass(pwd);
 		
 		service.insert(dto);
+	}
+	
+	@PostMapping("/member/login")
+	public boolean login(@RequestBody MemberDto dto) {
+		MemberDto login = service.chkEmail(dto.getEmail());
+		
+		if(login != null) {
+			boolean pwdMatch = pwdEncoder.matches(dto.getPass(), login.getPass());
+			
+			if(pwdMatch)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	@GetMapping("/member/list")

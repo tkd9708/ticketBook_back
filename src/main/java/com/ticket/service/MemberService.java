@@ -38,6 +38,18 @@ public class MemberService {
 		return mem;
 	}
 	
+	// find id
+	public MemberDto chkEmail(String email) {
+		Criteria criteria = new Criteria("email");
+		criteria.is(email);
+		
+		Query query = new Query(criteria);
+		
+		MemberDto dto = mongoTemplate.findOne(query, MemberDto.class, "Member");
+		
+		return dto;
+	}
+	
 	// update
 	public void update(MemberDto dto) {
 		Criteria criteria = new Criteria("_id");
